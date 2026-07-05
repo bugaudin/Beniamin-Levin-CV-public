@@ -19,11 +19,12 @@ Seeking relocation to the Netherlands for a Tech Lead role with an IND-recognise
 
 **CORE COMPETENCIES & TECHNICAL SKILLS**
 
-* **Technical Leadership & Delivery:** Engineering Leadership, System Design, Distributed Systems, Team Mentoring, Agile/Scrum, Sprint Planning, Story Mapping, L3 Production Support
-* **Backend:** Java, Spring Boot, Spring Cloud, Quarkus, REST, GraphQL, Microservices
+* **Technical Leadership & Delivery:** Engineering Leadership, System Design, Distributed Systems, Team Mentoring, Agile/Scrum, Sprint Planning, Story Mapping, Code Review, Technical Estimation & Work Breakdown, Requirements-to-Implementation Translation, L3 Production Support
+* **Backend & Enterprise Java:** Java, J2EE, Spring Framework, Spring Boot, Spring Cloud, Hibernate ORM, Quarkus, REST, Microservices, GraphQL
+* **Software Engineering:** OO Design Principles, SOLID Principles, Design Patterns, Performance & Maintainability, Unit Testing & Debugging, Coding Standards, JVM Performance & Memory Management
 * **Messaging & Data:** Kafka, RabbitMQ, Redis, Cassandra, MySQL, SQL
-* **Cloud & DevOps:** Docker, Kubernetes, OpenShift, GCP, AWS, Azure, CI/CD
-* **Frontend & Mobile:** Angular, JavaScript, jQuery, HTML5, CSS3, PHP, Android
+* **Cloud & DevOps:** Docker, Kubernetes, OpenShift, GCP, AWS, Azure, CI/CD, Unix Scripting
+* **Frontend & Integration:** JavaScript, XML, JSON, HTML5, Angular, jQuery, CSS3, PHP, Android
 * **AI-Assisted Engineering:** Cursor, Claude Sonnet, OpenAI GPT, Grok (xAI) API, natural-language-to-SQL, LLM prompt engineering, AI-assisted defect triage, repository-aware code analysis
 
 **PROFESSIONAL EXPERIENCE**
@@ -31,17 +32,17 @@ Seeking relocation to the Netherlands for a Tech Lead role with an IND-recognise
 **Netcracker Technology — Haifa, Israel / Nizhny Novgorod	July 2015 – Present**
 *Lead Software Engineer*
 
-* Reduced regression defects by 60% by introducing code-review guidelines, improving CI pipelines, and strengthening release-quality practices across the team.
-* Optimised business-critical order-entry flows to meet customer non-functional requirements, reducing page load times by 30–80% through profiling, caching improvements, and SQL tuning.
-* Introduced AI-assisted development workflows using Cursor across the team for coding, refactoring, and unit-test generation, spanning enterprise Java/Spring and Angular codebases.
+* Reduced regression defects by 60% by introducing code-review guidelines, enforcing unit-testing and coding-standards practices, improving CI pipelines, and strengthening release-quality practices across the team.
+* Optimised business-critical order-entry flows to meet customer non-functional requirements, reducing page load times by 30–80% through JVM profiling, caching improvements, SQL tuning, and a sustained focus on performance and maintainability.
+* Introduced AI-assisted development workflows using Cursor across the team for coding, refactoring, and unit-test generation, spanning enterprise Java/Spring/Hibernate and Angular/JavaScript codebases.
 * Configured and operationalised a Claude Sonnet-based AI defect-triage assistant by enabling repository and documentation access and defining project-specific rules and skills to surface likely root causes and suggested fixes.
-* Established and scaled an engineering pod in Pune, India: ran 70+ interviews, hired 5 engineers, and completed two multi-month on-site trips for architecture mentoring and knowledge transfer.
-* Led technical design, feature development, and scaling of enterprise telecom OSS/BSS product suites across Residential/Business Order Entry, CPQ, Cloud BSS, Product Catalog, Sales Order Engine/Validation, BAIP asset ordering, and Kubernetes-based delivery streams.
-* Directed a distributed engineering team of up to 11 developers across European development centres, owning sprint planning, story mapping, delivery timelines, code quality, and Level 3 production incident triage.
-* Delivered product enhancements, defect resolution, production support, release integration, backports, security fixes, and customer specific improvements across multiple Jira streams and 20+ customers.
+* Established and scaled an engineering pod in Pune, India: ran 70+ interviews, hired 5 engineers, and completed two multi-month on-site trips for architecture mentoring, OO/SOLID design principles, and knowledge transfer.
+* Led technical design, feature development, and scaling of enterprise telecom OSS/BSS product suites in Java/J2EE and Spring, translating business requirements into working implementations across Residential/Business Order Entry, CPQ, Cloud BSS, Product Catalog, Sales Order Engine/Validation, BAIP asset ordering, and Kubernetes-based delivery streams.
+* Directed a distributed engineering team of up to 11 developers across European development centres, owning sprint planning, story mapping, technical estimation, code review, delivery timelines, and Level 3 production incident triage.
+* Delivered tested, maintainable product enhancements, defect resolution, and production support across Java/Spring microservices and REST/XML/JSON integrations for 20+ customers via multiple Jira streams, including release integration, backports, and security fixes.
 * Supported major European telecom programmes including Telenet, Telefonica UK/O2, Vodafone Hungary, Nuuday/TDC, M-net, T-Mobile Netherlands/Odido, Andorra Telecom, and other regional operators.
-* Owned complex merge, rebase, dependency, and backport delivery across ROE, BOE, SOE/SOV, POC, OEF, CPQ, and Cloud BSS release streams.
-* Improved ADA/accessibility compliance for Charter Communications by resolving keyboard-only navigation defects, JAWS screen-reader behaviour, and inaccessible error-message tooltip issues in CPQ/Quotes UI flows.
+* Owned complex merge, rebase, dependency, and backport delivery with Unix shell scripting across ROE, BOE, SOE/SOV, POC, OEF, CPQ, and Cloud BSS release streams.
+* Improved ADA/accessibility compliance for Charter Communications by resolving keyboard-only navigation defects, JAWS screen-reader behaviour, and inaccessible error-message tooltip issues in CPQ/Quotes HTML/JavaScript UI flows.
 
 **Symphony Teleca Corporation — Nizhny Novgorod	February 2011 – July 2015**
 *Principal Software Engineer*

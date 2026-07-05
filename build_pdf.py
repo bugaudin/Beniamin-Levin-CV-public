@@ -485,7 +485,16 @@ class CvBuilder:
 
             if title_upper == 'CORE COMPETENCIES & TECHNICAL SKILLS':
                 for block in section['blocks']:
-                    self.skill_line(block['label'], block['rest'])
+                    if block['type'] == 'skill':
+                        self.skill_line(block['label'], block['rest'])
+                    elif block['type'] == 'bullet':
+                        segments = block['segments']
+                        if segments and segments[0][1] and segments[0][0].endswith(': '):
+                            label = segments[0][0][:-2]
+                            rest = ''.join(text for text, _ in segments[1:])
+                            self.skill_line(label, rest)
+                        else:
+                            self.bullet(segments)
                 continue
 
             if title_upper in {'PROFESSIONAL EXPERIENCE', FREELANCE_SECTION.upper()}:
