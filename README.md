@@ -19,12 +19,12 @@ Seeking relocation to the Netherlands for a Tech Lead role with an IND-recognise
 
 **CORE COMPETENCIES & TECHNICAL SKILLS**
 
-**Technical Leadership & Delivery:** Engineering Leadership, System Design, Distributed Systems, Team Mentoring, Agile/Scrum, Sprint Planning, Story Mapping, L3 Production Support
-**Backend:** Java, Spring Boot, Spring Cloud, Quarkus, REST, GraphQL, Microservices
-**Messaging & Data:** Kafka, RabbitMQ, Redis, Cassandra, MySQL, SQL
-**Cloud & DevOps:** Docker, Kubernetes, OpenShift, GCP, AWS, Azure, CI/CD
-**Frontend & Mobile:** Angular, JavaScript, jQuery, HTML5, CSS3, PHP, Android
-**AI-Assisted Engineering:** Cursor, Claude Sonnet, OpenAI GPT, Grok (xAI) API, natural-language-to-SQL, LLM prompt engineering, AI-assisted defect triage, repository-aware code analysis
+* **Technical Leadership & Delivery:** Engineering Leadership, System Design, Distributed Systems, Team Mentoring, Agile/Scrum, Sprint Planning, Story Mapping, L3 Production Support
+* **Backend:** Java, Spring Boot, Spring Cloud, Quarkus, REST, GraphQL, Microservices
+* **Messaging & Data:** Kafka, RabbitMQ, Redis, Cassandra, MySQL, SQL
+* **Cloud & DevOps:** Docker, Kubernetes, OpenShift, GCP, AWS, Azure, CI/CD
+* **Frontend & Mobile:** Angular, JavaScript, jQuery, HTML5, CSS3, PHP, Android
+* **AI-Assisted Engineering:** Cursor, Claude Sonnet, OpenAI GPT, Grok (xAI) API, natural-language-to-SQL, LLM prompt engineering, AI-assisted defect triage, repository-aware code analysis
 
 **PROFESSIONAL EXPERIENCE**
 
