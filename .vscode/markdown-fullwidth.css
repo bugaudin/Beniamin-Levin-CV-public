@@ -1,0 +1,21 @@
+body,
+.markdown-body {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 1.5rem 2rem !important;
+  box-sizing: border-box;
+}
+
+table {
+  width: 100%;
+  table-layout: auto;
+  font-size: 13px;
+}
+
+th,
+td {
+  white-space: normal;
+  vertical-align: top;
+  padding: 8px 12px;
+}

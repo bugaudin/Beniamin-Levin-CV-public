@@ -6,13 +6,12 @@ benlevin0213@gmail.com
 
 **PROFESSIONAL SUMMARY**
 
-Lead Software Engineer with 19+ years of experience building, scaling, and supporting enterprise telecom OSS/BSS, automotive, and mobile platforms. 
-
-Deep hands-on expertise in Java/Spring engineering, system design, distributed delivery, Kubernetes/OpenShift-based cloud platforms, and AI-assisted engineering workflows, including LLM-based defect triage and repository-aware code analysis integrated into the team SDLC.
+Tech Lead with 19+ years of experience building, scaling, and supporting enterprise telecom OSS/BSS, automotive, and mobile platforms, including leading distributed engineering teams of up to 11 developers across European development centres and India and delivering production systems for major telecom operators such as Telenet, Telefónica/O2, GCI Alaska, GTD Chile, and Rakuten.
 
 Delivered measurable engineering and business impact: reduced regression defects by 60% over 2 years through CI and code-review improvements, reduced page-load times by 30–80% across critical order-entry workflows, including improvements from approximately 4s to 1s, improved accessibility compliance, and established a Pune engineering pod by running 70+ interviews over 3 months, hiring 5 engineers, and leading on-site architecture mentoring.
 
-Led distributed engineering teams of up to 11 developers across European development centres and India. Delivered production systems for major telecom operators including Telenet, Telefónica/O2, GCI Alaska, GTD Chile, and Rakuten.
+Deep hands-on background in Java/Spring engineering, system design, distributed delivery, Kubernetes/OpenShift-based cloud delivery, and AI-assisted engineering workflows, including LLM-based defect triage and repository-aware code analysis integrated into the team SDLC.
+
 
 **CORE COMPETENCIES & TECHNICAL SKILLS**
 
@@ -28,14 +27,14 @@ Led distributed engineering teams of up to 11 developers across European develop
 **Netcracker Technology — Israel / Russia	July 2015 – Present**
 *Lead Software Engineer*
 
-- Reduced page-load times by 30–80% across critical order-entry workflows, including improvements from approximately 4s to 1s, through profiling, caching improvements, and SQL tuning.
-- Introduced AI-assisted development workflows using Cursor across the team for coding, refactoring, and unit-test generation, spanning enterprise Java/Spring and Angular codebases.
-- Configured and operationalised a Claude Sonnet-based AI defect-triage assistant by enabling repository and documentation access and defining project-specific rules and skills to surface likely root causes and suggested fixes.
-- Reduced regression defects by 60% over 2 years by introducing code-review guidelines, improving CI pipelines, and strengthening release-quality practices across the team.
-- Improved ADA/accessibility compliance for Charter Communications by resolving keyboard-only navigation defects, JAWS screen-reader behaviour, and inaccessible error-message tooltip issues in CPQ/Quotes UI flows.
 - Established and scaled an engineering pod in Pune, India: ran 70+ interviews over 3 months, hired 5 engineers, and completed two multi-month on-site trips for architecture mentoring and knowledge transfer.
 - Led technical design and multi-release delivery for enterprise OSS/BSS platforms serving 20+ customers, coordinating feature development, integration, backports, security fixes, dependencies, and production support.
 - Directed a distributed engineering team of up to 11 developers across European development centres and India, owning sprint planning, story mapping, delivery timelines, code quality, and Level 3 production incident triage.
+- Introduced AI-assisted development workflows using Cursor across the team for coding, refactoring, and unit-test generation, spanning enterprise Java/Spring and Angular codebases.
+- Reduced regression defects by 60% over 2 years by introducing code-review guidelines, improving CI pipelines, and strengthening release-quality practices across the team.
+- Reduced page-load times by 30–80% across critical order-entry workflows, including improvements from approximately 4s to 1s, through profiling, caching improvements, and SQL tuning.
+- Configured and operationalised a Claude Sonnet-based AI defect-triage assistant by enabling repository and documentation access and defining project-specific rules and skills to surface likely root causes and suggested fixes.
+- Improved ADA/accessibility compliance for Charter Communications by resolving keyboard-only navigation defects, JAWS screen-reader behaviour, and inaccessible error-message tooltip issues in CPQ/Quotes UI flows.
 
 **Symphony Teleca Corporation — Russia / South Korea	February 2011 – July 2015**
 *Principal Software Engineer*
