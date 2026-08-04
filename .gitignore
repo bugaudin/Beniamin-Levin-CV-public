@@ -1,5 +1,7 @@
 secrets.txt
 .venv/
+cv-custom/
+.cursor/rules/cv-custom.mdc
 Beniamin-Levin-CV.pdf
 Beniamin-Levin-CV-nd.pdf
 Beniamin-Levin-CV2.pdf
