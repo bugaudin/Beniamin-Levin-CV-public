@@ -2,6 +2,7 @@ secrets.txt
 .venv/
 cv-custom/
 .cursor/rules/cv-custom.mdc
+cover-letter-skill.md
 Beniamin-Levin-CV.pdf
 Beniamin-Levin-CV-nd.pdf
 Beniamin-Levin-CV2.pdf
@@ -24,3 +25,6 @@ Beniamin-Levin-Wolters-Kluwer.pdf
 /interviews
 companies-transfer-analysis.html
 companies-transfer-analysis.md
+Beniamin_Levin_Portfolio.pdf
+chatgpt-kit/export_application_pdfs.py
+chatgpt-kit/README.md

@@ -6,13 +6,14 @@ benlevin0213@gmail.com
 
 **PROFESSIONAL SUMMARY**
 
-Lead Software Engineer with 19+ years of experience building, scaling, and supporting enterprise telecom OSS/BSS, automotive, and mobile platforms. 
+Lead Software Engineer with 19+ years of experience building, scaling, and supporting enterprise telecom OSS/BSS, automotive, and mobile platforms.
 
-Deep hands-on expertise in Java/Spring engineering, system design, distributed delivery, Kubernetes/OpenShift-based cloud platforms, and AI-assisted engineering workflows, including LLM-based defect triage and repository-aware code analysis integrated into the team SDLC.
+Deep hands-on expertise in Java/Spring engineering, system design, distributed delivery, Kubernetes/OpenShift-based cloud platforms, and AI-assisted engineering workflows. Introduced AI-based development and defect triage, cutting unit-test creation time by **~40%** and average defect-triage time from **~2 hours to ~30 minutes**.
 
-Delivered measurable engineering and business impact: reduced regression defects by 60% over 2 years through CI and code-review improvements, reduced page-load times by 30–80% across critical order-entry workflows, including improvements from approximately 4s to 1s, improved accessibility compliance, and established a Pune engineering pod by running 70+ interviews over 3 months, hiring 5 engineers, and leading on-site architecture mentoring.
+Delivered measurable engineering and business impact: reduced incoming defect volume for the **Order Capture component by ~75% over two years**, cut page-load and response times by **30–88%**, including improvements from **~4s to ~0.5s**, and resolved **20 accessibility-related defects for Charter Communications**. Established a Pune engineering pod by running **70+ interviews over three months**, hiring **5 engineers**, and leading on-site architecture mentoring.
 
-Led distributed engineering teams of up to 11 developers across European development centres and India. Delivered production systems for major telecom operators including Telenet, Telefónica/O2, GCI Alaska, GTD Chile, and Rakuten.
+Led distributed engineering teams of up to **11 developers** across European development centres and India. Delivered production systems for major telecom operators including Telenet, Telefónica/O2, GCI Alaska, GTD Chile, and Rakuten.
+
 
 **CORE COMPETENCIES & TECHNICAL SKILLS**
 
@@ -28,14 +29,15 @@ Led distributed engineering teams of up to 11 developers across European develop
 **Netcracker Technology — Israel / Russia	July 2015 – Present**
 *Lead Software Engineer*
 
-- Reduced page-load times by 30–80% across critical order-entry workflows, including improvements from approximately 4s to 1s, through profiling, caching improvements, and SQL tuning.
-- Introduced AI-assisted development workflows using Cursor across the team for coding, refactoring, and unit-test generation, spanning enterprise Java/Spring and Angular codebases.
-- Configured and operationalised a Claude Sonnet-based AI defect-triage assistant by enabling repository and documentation access and defining project-specific rules and skills to surface likely root causes and suggested fixes.
-- Reduced regression defects by 60% over 2 years by introducing code-review guidelines, improving CI pipelines, and strengthening release-quality practices across the team.
-- Improved ADA/accessibility compliance for Charter Communications by resolving keyboard-only navigation defects, JAWS screen-reader behaviour, and inaccessible error-message tooltip issues in CPQ/Quotes UI flows.
-- Established and scaled an engineering pod in Pune, India: ran 70+ interviews over 3 months, hired 5 engineers, and completed two multi-month on-site trips for architecture mentoring and knowledge transfer.
-- Led technical design and multi-release delivery for enterprise OSS/BSS platforms serving 20+ customers, coordinating feature development, integration, backports, security fixes, dependencies, and production support.
-- Directed a distributed engineering team of up to 11 developers across European development centres and India, owning sprint planning, story mapping, delivery timelines, code quality, and Level 3 production incident triage.
+- Reduced **response times by 30–88% across critical enterprise order-entry workflows**, including cutting key flows from **~4s to ~0.5s**, by eliminating redundant service calls, introducing targeted caching, and tuning SQL and application hot paths.
+- Led **technical design, feature development, and scaling across enterprise telecom OSS/BSS platforms**, spanning order entry, CPQ, product catalog, validation, and Kubernetes-based delivery streams.
+- Reduced **incoming defect volume for the Order Capture component by ~75% over two years** by identifying and eliminating recurring root causes, strengthening code reviews and CI validation, and improving engineering quality before changes reached customer environments.
+- Reduced **average defect-triage time from ~2 hours to ~30 minutes** by operationalising a Claude Sonnet-based engineering assistant with repository and documentation access, project-specific engineering rules, and automated root-cause and fix suggestions.
+- Scaled **AI-assisted development across Java/Spring and Angular teams**, introducing repository-aware workflows for implementation, refactoring, code analysis, and test generation and **cutting unit-test creation time by ~40%**.
+- Served as a **hands-on technical owner across multi-release OSS/BSS delivery for 30+ telecom customer programs**, resolving architecture, integration, performance, security, backport, and production-release issues across enterprise order-entry platforms.
+- Led a **distributed engineering team of up to 11 developers across Europe and India while remaining hands-on**, delivering concurrent customer releases and Level-3 production support while owning technical quality and critical incident resolution.
+- Built a **5-engineer Pune engineering pod in three months**, selecting the team from 70+ interviews and accelerating technical ramp-up through two multi-month on-site architecture and knowledge-transfer engagements.
+
 
 **Symphony Teleca Corporation — Russia / South Korea	February 2011 – July 2015**
 *Principal Software Engineer*

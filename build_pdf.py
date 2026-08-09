@@ -43,10 +43,21 @@ BASE_FONT_EDU_DETAIL = 9.1
 SECTION_TITLES = {
     'PROFESSIONAL SUMMARY',
     'CORE COMPETENCIES & TECHNICAL SKILLS',
+    'CORE TECHNICAL SKILLS',
     'PROFESSIONAL EXPERIENCE',
     'FREELANCE & PERSONAL PROJECTS — PART-TIME / OUTSIDE FULL-TIME EMPLOYMENT',
     'EDUCATION & ACADEMIC TRAINING',
+    'EDUCATION',
     'LANGUAGES',
+}
+
+SKILLS_SECTIONS = {
+    'CORE COMPETENCIES & TECHNICAL SKILLS',
+    'CORE TECHNICAL SKILLS',
+}
+EDUCATION_SECTIONS = {
+    'EDUCATION & ACADEMIC TRAINING',
+    'EDUCATION',
 }
 
 FREELANCE_SECTION = 'Freelance & Personal Projects — Part-Time / Outside Full-Time Employment'
@@ -62,7 +73,7 @@ HANDS_ON_OUTPUT = 'Beniamin-Levin-CV-hands-on.pdf'
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SOFFICE = '/Applications/LibreOffice.app/Contents/MacOS/soffice'
 INLINE_MARKUP_RE = re.compile(
-    r'\[([^\]]+)\]\(([^)]+)\)|\bikite\.fyi\b|https?://[^\s),;]+'
+    r'\[([^\]]+)\]\(([^)]+)\)|\*\*(.+?)\*\*|\bikite\.fyi\b|https?://[^\s),;]+'
 )
 
 
@@ -71,21 +82,23 @@ def tokenize_inline_markup(text):
     pos = 0
     for match in INLINE_MARKUP_RE.finditer(text):
         if match.start() > pos:
-            parts.append(('text', text[pos:match.start()]))
+            parts.append(('text', text[pos:match.start()], False))
         token = match.group(0)
         if token.startswith('['):
             url = match.group(2)
-            parts.append(('link', url, url))
+            parts.append(('link', url, url, False))
+        elif token.startswith('**'):
+            parts.append(('text', match.group(3), True))
         elif token == 'ikite.fyi':
-            parts.append(('link', 'ikite.fyi', 'https://ikite.fyi'))
+            parts.append(('link', 'ikite.fyi', 'https://ikite.fyi', False))
         elif token.startswith('http'):
             url = token.rstrip('.,;')
-            parts.append(('link', url, url))
+            parts.append(('link', url, url, False))
             if len(url) < len(token):
-                parts.append(('text', token[len(url):]))
+                parts.append(('text', token[len(url):], False))
         pos = match.end()
     if pos < len(text):
-        parts.append(('text', text[pos:]))
+        parts.append(('text', text[pos:], False))
     return parts
 
 
@@ -154,7 +167,7 @@ def parse_bullet_segments(text):
     match = re.match(r'\*\*(.+?):\*\*\s*(.*)', text, re.DOTALL)
     if match:
         return [(match.group(1) + ': ', True), (match.group(2), False)]
-    return [(strip_md_bold(text), False)]
+    return [(text, False)]
 
 
 def parse_skill_line(text):
@@ -169,7 +182,41 @@ def parse_job_header(text):
     if '\t' in inner:
         title, dates = inner.split('\t', 1)
         return title.strip(), dates.strip()
+    if ' | ' in inner:
+        title, dates = inner.rsplit(' | ', 1)
+        return title.strip(), dates.strip()
     return inner, None
+
+
+def heading_level(text):
+    match = re.match(r'^(#{1,6})\s+(.+)$', text)
+    if not match:
+        return None, None
+    return len(match.group(1)), match.group(2).strip()
+
+
+def extract_markdown_link(text):
+    match = re.search(r'\[([^\]]+)\]\(([^)]+)\)', text)
+    if not match:
+        return None
+    return match.group(1), match.group(2)
+
+
+def is_section_title_text(text):
+    return strip_md_bold(text).upper() in SECTION_TITLES
+
+
+def parse_role_date_line(text):
+    """Parse '**Role** | dates' or '*Role*' lines."""
+    stripped = text.strip()
+    if ' | ' in stripped:
+        role_part, dates = stripped.rsplit(' | ', 1)
+        return strip_md_bold(role_part), dates.strip()
+    if is_italic_line(stripped):
+        return strip_md_italic(stripped), None
+    if stripped.startswith('**') and stripped.endswith('**'):
+        return strip_md_bold(stripped), None
+    return None, None
 
 
 def parse_readme(path):
@@ -178,6 +225,7 @@ def parse_readme(path):
 
     data = {
         'name': None,
+        'tagline': None,
         'contact_bits': [],
         'linkedin': None,
         'sections': [],
@@ -186,8 +234,11 @@ def parse_readme(path):
 
     def start_section(title):
         nonlocal current
-        current = {'title': title, 'blocks': []}
+        current = {'title': strip_md_bold(title), 'blocks': []}
         data['sections'].append(current)
+
+    def current_title_upper():
+        return current['title'].upper() if current else ''
 
     i = 0
     while i < len(lines):
@@ -198,45 +249,115 @@ def parse_readme(path):
             i += 1
             continue
 
+        level, heading = heading_level(stripped)
+
+        # ATX name / sections / jobs
+        if level == 1 and data['name'] is None:
+            data['name'] = strip_md_bold(heading)
+            i += 1
+            continue
+
+        if level == 2 and is_section_title_text(heading):
+            start_section(heading)
+            i += 1
+            continue
+
+        if level == 3 and current_title_upper() == 'PROFESSIONAL EXPERIENCE':
+            company = strip_md_bold(heading)
+            role = None
+            dates = None
+            bullets = []
+            j = i + 1
+            while j < len(lines):
+                nxt = lines[j].strip()
+                if not nxt:
+                    j += 1
+                    continue
+                nxt_level, nxt_heading = heading_level(nxt)
+                if nxt_level in {2, 3}:
+                    break
+                if is_section_title_text(nxt):
+                    break
+                if role is None and (
+                    nxt.startswith('**') or is_italic_line(nxt)
+                ):
+                    role, dates = parse_role_date_line(nxt)
+                    j += 1
+                    continue
+                if is_bullet_line(nxt):
+                    bullets.append(parse_bullet_segments(nxt))
+                    j += 1
+                    continue
+                break
+            current['blocks'].append({
+                'type': 'job',
+                'company': company,
+                'dates': dates,
+                'role': role,
+                'subtitle': None,
+                'bullets': bullets,
+            })
+            i = j
+            continue
+
+        # Legacy **NAME** header
         if stripped.startswith('**') and stripped.endswith('**') and data['name'] is None:
             data['name'] = strip_md_bold(stripped)
             i += 1
             continue
 
-        if data['name'] and not data['contact_bits'] and not stripped.startswith('**'):
-            if stripped.startswith('[') and '](' in stripped:
-                m = re.match(r'\[(.+?)\]\((.+?)\)', stripped)
-                if m:
-                    data['linkedin'] = (m.group(1), m.group(2))
-            else:
-                data['contact_bits'].append(stripped)
+        # Tagline under name (ATX format)
+        if (
+            data['name']
+            and data['tagline'] is None
+            and not data['contact_bits']
+            and not data['sections']
+            and stripped.startswith('**')
+            and stripped.endswith('**')
+            and not is_section_title_text(stripped)
+        ):
+            data['tagline'] = strip_md_bold(stripped)
             i += 1
             continue
 
+        # Contact line(s)
+        if data['name'] and not data['contact_bits'] and not data['sections']:
+            link = extract_markdown_link(stripped)
+            if link and stripped.startswith('[') and '](' in stripped and '|' not in stripped:
+                data['linkedin'] = link
+                i += 1
+                continue
+            if '@' in stripped or '|' in stripped or link:
+                if link and data['linkedin'] is None:
+                    data['linkedin'] = link
+                data['contact_bits'].append(stripped)
+                i += 1
+                continue
+
         if stripped.startswith('[') and '](' in stripped and data['linkedin'] is None:
-            m = re.match(r'\[(.+?)\]\((.+?)\)', stripped)
-            if m:
-                data['linkedin'] = (m.group(1), m.group(2))
+            link = extract_markdown_link(stripped)
+            if link:
+                data['linkedin'] = link
             i += 1
             continue
 
         skill = parse_skill_line(strip_bullet_prefix(stripped))
-        if skill and current and current['title'].upper() == 'CORE COMPETENCIES & TECHNICAL SKILLS':
+        if skill and current and current_title_upper() in SKILLS_SECTIONS:
             current['blocks'].append({'type': 'skill', 'label': skill[0], 'rest': skill[1]})
             i += 1
             continue
 
-        if stripped.startswith('**') and stripped.endswith('**'):
+        if stripped.startswith('**'):
             title = strip_md_bold(stripped)
-            if is_section_header(stripped):
+            if stripped.endswith('**') and is_section_title_text(stripped):
                 start_section(title)
                 i += 1
                 continue
 
-            if current and current['title'].upper() in {
+            if current and current_title_upper() in {
                 'PROFESSIONAL EXPERIENCE',
                 FREELANCE_SECTION.upper(),
-            }:
+            } and (stripped.endswith('**') or '\t' in stripped):
                 company, dates = parse_job_header(stripped)
                 role = None
                 subtitle = None
@@ -247,7 +368,7 @@ def parse_readme(path):
                     if not nxt:
                         j += 1
                         continue
-                    if is_section_header(nxt):
+                    if is_section_title_text(nxt) or heading_level(nxt)[0]:
                         break
                     if is_bullet_line(nxt) and not nxt.startswith('**'):
                         bullets.append(parse_bullet_segments(nxt))
@@ -274,31 +395,36 @@ def parse_readme(path):
                 i = j
                 continue
 
-            if current and current['title'].upper() == 'EDUCATION & ACADEMIC TRAINING':
-                title = strip_md_bold(stripped)
+            if current and current_title_upper() in EDUCATION_SECTIONS:
+                company, dates = parse_job_header(stripped)
                 j = i + 1
                 while j < len(lines) and not lines[j].strip():
                     j += 1
                 next_line = lines[j].strip() if j < len(lines) else ''
-                if '\t' in title or is_italic_line(next_line):
-                    company, dates = parse_job_header(stripped)
-                    role = None
+                role = None
+                if (
+                    next_line
+                    and not is_section_title_text(next_line)
+                    and not heading_level(next_line)[0]
+                    and not (
+                        next_line.startswith('**')
+                        and ('|' in next_line or next_line.endswith('**'))
+                    )
+                ):
                     if is_italic_line(next_line):
                         role = strip_md_italic(next_line)
-                        j += 1
-                    current['blocks'].append({
-                        'type': 'job',
-                        'company': company,
-                        'dates': dates,
-                        'role': role,
-                        'subtitle': None,
-                        'bullets': [],
-                    })
-                    i = j
-                    continue
-
-                current['blocks'].append({'type': 'subhead', 'text': title})
-                i += 1
+                    else:
+                        role = next_line
+                    j += 1
+                current['blocks'].append({
+                    'type': 'job',
+                    'company': company,
+                    'dates': dates,
+                    'role': role,
+                    'subtitle': None,
+                    'bullets': [],
+                })
+                i = j
                 continue
 
         if is_bullet_line(stripped):
@@ -310,8 +436,16 @@ def parse_readme(path):
             i += 1
             continue
 
-        if current and current['title'].upper() == 'PROFESSIONAL SUMMARY':
+        if current and current_title_upper() == 'PROFESSIONAL SUMMARY':
             current['blocks'].append({'type': 'para', 'text': stripped})
+            i += 1
+            continue
+
+        if current and current_title_upper() == 'LANGUAGES':
+            current['blocks'].append({'type': 'para', 'text': stripped})
+            i += 1
+            continue
+
         i += 1
 
     return data
@@ -323,6 +457,7 @@ def filter_cv_data(data, exclude_paragraphs=(), exclude_sections=()):
     exclude_sections_upper = {title.upper() for title in exclude_sections}
     filtered = {
         'name': data['name'],
+        'tagline': data.get('tagline'),
         'contact_bits': list(data['contact_bits']),
         'linkedin': data['linkedin'],
         'sections': [],
@@ -443,6 +578,13 @@ class CvBuilder:
             tracking=40,
         )
 
+    def tagline_line(self, text):
+        p = self.doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        self.set_space(p, 0, 3)
+        r = p.add_run(text)
+        style_run(r, FONT_BODY, size=self.font_role, bold=True, color=BLACK)
+
     def contact_line(self, text):
         p = self.doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -486,16 +628,19 @@ class CvBuilder:
     ):
         for kind, *payload in tokenize_inline_markup(text):
             if kind == 'text':
-                r = paragraph.add_run(payload[0])
-                style_run(r, font_name, size=font_size, bold=bold, color=color)
+                content, span_bold = payload
+                r = paragraph.add_run(content)
+                style_run(
+                    r, font_name, size=font_size, bold=bold or span_bold, color=color
+                )
             else:
-                display, url = payload
+                display, url, span_bold = payload
                 self.append_hyperlink(
                     paragraph,
                     display,
                     url,
                     font_size,
-                    bold=bold,
+                    bold=bold or span_bold,
                     color=color,
                     font_name=font_name,
                 )
@@ -576,12 +721,15 @@ class CvBuilder:
 
     def edu(self, inst, dates, detail):
         self.dated_line(inst, dates, title_font=self.font_edu, date_bold=True)
+        if not detail:
+            return
         pd = self.justify(self.doc.add_paragraph())
         self.set_space(pd, 0, 2)
-        ri = pd.add_run(detail)
-        style_run(
-            ri, FONT_BODY, size=self.font_edu_detail, italic=True, color=GREY
+        self.append_rich_text(
+            pd, detail, self.font_edu_detail, bold=False, color=GREY
         )
+        for run in pd.runs:
+            run.italic = True
 
     def subhead(self, text):
         p = self.doc.add_paragraph()
@@ -592,8 +740,7 @@ class CvBuilder:
     def para(self, text, after=1.5):
         p = self.justify(self.doc.add_paragraph())
         self.set_space(p, 0, after)
-        r = p.add_run(text)
-        style_run(r, FONT_BODY, size=self.font_body, color=BLACK)
+        self.append_rich_text(p, text, self.font_body, bold=False, color=BLACK)
 
     def contact_details_line(self, parts, linkedin=None):
         """Single centered contact line: text parts and optional LinkedIn hyperlink."""
@@ -628,20 +775,48 @@ class CvBuilder:
 
     def build_from_data(self, data, phone):
         self.name_heading(data['name'])
+        if data.get('tagline'):
+            self.tagline_line(data['tagline'])
+
         contact = data['contact_bits'][0] if data['contact_bits'] else ''
+        linkedin = data.get('linkedin')
+        if not linkedin:
+            linkedin = extract_markdown_link(contact)
         contact = re.sub(
             r'\[([^\]]+)\]\([^)]+\)',
-            r'\1',
+            '',
             contact,
         )
+        contact = re.sub(r'\s*\|\s*$', '', contact).strip()
+        contact = re.sub(r'\s*\|\s*\|', ' | ', contact)
+
         if '|' in contact:
-            parts = [part.strip() for part in contact.split('|')]
-            parts = [parts[0], phone] + parts[1:]
+            parts = [part.strip() for part in contact.split('|') if part.strip()]
         elif contact:
-            parts = [contact, phone]
+            parts = [contact]
         else:
+            parts = []
+
+        has_phone = any(
+            part.replace('+', '').replace(' ', '').isdigit()
+            or part.startswith('+')
+            for part in parts
+        )
+        if not has_phone and phone:
+            # Prefer email first, then phone, then remaining parts.
+            if parts and '@' in parts[0]:
+                parts = [parts[0], phone] + parts[1:]
+            else:
+                parts = [phone] + parts
+        if not parts:
             parts = [phone]
-        self.contact_details_line(parts, linkedin=data['linkedin'])
+
+        # Drop plain linkedin text leftovers; hyperlink is rendered separately.
+        parts = [
+            part for part in parts
+            if 'linkedin.com' not in part.lower()
+        ]
+        self.contact_details_line(parts, linkedin=linkedin)
 
         has_freelance = any(
             section['title'].upper() == FREELANCE_SECTION.upper()
@@ -659,7 +834,7 @@ class CvBuilder:
                     self.para(block['text'], after=after)
                 continue
 
-            if title_upper == 'CORE COMPETENCIES & TECHNICAL SKILLS':
+            if title_upper in SKILLS_SECTIONS:
                 for block in section['blocks']:
                     if block['type'] == 'skill':
                         self.skill_line(block['label'], block['rest'])
@@ -677,7 +852,7 @@ class CvBuilder:
                 for block in section['blocks']:
                     if block['type'] != 'job':
                         continue
-                    # Without freelance content, open page 2 at Symphony.
+                    # Without freelance content, open page 2 at Symphony Teleca.
                     page_break_job = (
                         not has_freelance
                         and title_upper == 'PROFESSIONAL EXPERIENCE'
@@ -694,7 +869,7 @@ class CvBuilder:
                         self.bullet(segments)
                 continue
 
-            if title_upper == 'EDUCATION & ACADEMIC TRAINING':
+            if title_upper in EDUCATION_SECTIONS:
                 for block in section['blocks']:
                     if block['type'] == 'job':
                         self.edu(block['company'], block['dates'], block['role'])
@@ -708,6 +883,8 @@ class CvBuilder:
                 for block in section['blocks']:
                     if block['type'] == 'bullet':
                         self.bullet(block['segments'])
+                    elif block['type'] == 'para':
+                        self.para(block['text'], after=0)
 
 
 def convert_docx_to_pdf(docx_path, pdf_path):
@@ -761,8 +938,15 @@ def freelance_starts_on_page_2(pdf_path):
 
 def layout_ok(pdf_path, exclude_freelance=False):
     if exclude_freelance:
-        # Pack Netcracker on page 1; Symphony opens page 2.
-        return section_starts_on_page_2(pdf_path, 'symphony')
+        # Page 1: header through Netcracker. Page 2 opens at Symphony Teleca.
+        if pdf_page_count(pdf_path) != 2:
+            return False
+        if not section_starts_on_page_2(pdf_path, 'symphony'):
+            return False
+        page2 = page_text(pdf_path, 2).lower()
+        if 'netcracker' in page2:
+            return False
+        return True
     return freelance_starts_on_page_2(pdf_path)
 
 
@@ -777,7 +961,8 @@ def build_trial(data, phone, tmp_dir, tag, scale, line_spacing):
 
 
 def find_best_layout(data, phone, tmp_dir, exclude_freelance=False):
-    lo, hi = 0.84, 1.15
+    scale_hi = 1.35 if exclude_freelance else 1.15
+    lo, hi = 0.84, scale_hi
     best_scale = lo
     found = False
     for i in range(14):
@@ -798,7 +983,11 @@ def find_best_layout(data, phone, tmp_dir, exclude_freelance=False):
                 return scale, 0.96
         return 0.84, 0.96
 
-    lo, hi = max(0.96, LINE_SPACING - 0.06), LINE_SPACING + 0.06
+    lo, hi = (
+        (max(1.0, LINE_SPACING), LINE_SPACING + 0.18)
+        if exclude_freelance
+        else (max(0.96, LINE_SPACING - 0.06), LINE_SPACING + 0.06)
+    )
     best_line_spacing = LINE_SPACING
     for i in range(12):
         mid = (lo + hi) / 2
