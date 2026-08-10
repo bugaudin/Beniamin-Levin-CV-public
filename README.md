@@ -18,9 +18,9 @@ Led distributed engineering teams of up to **11 developers** across European dev
 **CORE COMPETENCIES & TECHNICAL SKILLS**
 
 - **Technical Leadership & Delivery:** Engineering Leadership, System Design, Distributed Systems, Team Mentoring, Agile/Scrum, Sprint Planning, Story Mapping, L3 Production Support
-- **Backend:** Java, Spring Boot, Spring Cloud, Quarkus, REST, GraphQL, Microservices, Golang
+- **Backend:** Java, Spring Boot 3, Spring Framework 6, Spring Cloud, Quarkus, Node.js, REST, GraphQL, Microservices, Golang
 - **Messaging & Data:** Kafka, RabbitMQ, Redis, Cassandra, MySQL, PostgreSQL, SQL, NoSQL
-- **Cloud & DevOps:** Docker, Kubernetes, OpenShift, GCP, AWS, Azure, Oracle Cloud, CI/CD
+- **Cloud & DevOps:** Docker, Kubernetes, OpenShift, GCP, AWS, Azure, Oracle Cloud, Linux, CI/CD, Prometheus, Grafana, monitoring, logging, telemetry
 - **Frontend & Mobile:** Angular, JavaScript, TypeScript, jQuery, HTML5, CSS3, PHP, Android
 - **AI-Assisted Engineering:** Cursor, Claude Sonnet, OpenAI GPT, Grok (xAI) API, natural-language-to-SQL, LLM prompt engineering, AI-assisted defect triage, repository-aware code analysis
 
