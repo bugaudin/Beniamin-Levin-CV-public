@@ -58,6 +58,28 @@ Led distributed engineering teams of up to **11 developers** across European dev
 - Built high-availability web applications for operating, remotely administering, and monitoring Nortel ICP communication infrastructure.
 - Authored architecture specifications and deployment plans; maintained JUnit/Cobertura test suites to raise coverage and reliability.
 
+**Freelance & Personal Projects — Part-Time / Outside Full-Time Employment**
+
+**Sure Communications — Freelance Software Engineer	2019 – Present | Part-time freelance**
+*Telecom and web integration solutions for business clients*
+
+- Delivered end-to-end PHP/MySQL/JavaScript web applications, customer portals, CRM integrations, and back-office tooling for telecom and business clients, including Shopify e-commerce integrations, Memento platform delivery, and the flagship dealer/consumer sales platform for Morgan Motor Company, covering requirements analysis, deployment, support, and iterative enhancement.
+- Led technical architecture, backend automation, performance optimisation, and technical oversight for enterprise platforms crm.sur.co.uk, morgan-sales.com, sur.co.uk, altis.co.uk, and melodycare.co.uk; built file-rendering services, cron task runners, email to comment synchronisation, database tuning, an OpenAI ChatGPT-powered email-reply generator (context-aware drafting with greeting personalisation, thread trimming, and chase-email detection), and an AI ticket comment generator that drafts support responses from full ticket context and conversation history.
+- Designed and built "SurAI", a natural-language business-intelligence copilot embedded in the CRM that converts plain-English questions into schema-aware SQL via the Grok (xAI) API, injecting table/column metadata and comments to ground the model and prevent hallucinated fields; enforced safety through a read-only database connection, SELECT-only guardrails, and column validation against the live schema, then auto-rendered results as hyperlinked record tables and Chart.js visualisations (bar/pie/line) for non-technical staff.
+
+**ikite.fyi	2023 – Present | Personal project**
+*Israeli Mediterranean wind monitoring platform for kitesurfing/windsurfing*
+
+- Designed, built, and operate a production wind-monitoring web app hosted on Oracle Cloud (OCI), covering live multi-station wind readings, time-series charts, beach cameras, and a secured admin settings page; originally built in PHP (2023) and fully rewritten in Golang in 2026.
+- Implemented scheduled collectors that poll Windguru and local Israeli station feeds, persist data in MySQL, and send Telegram wind-threshold alerts; added forecast jobs including Hebrew AI report ingestion with English translation and daily Windguru model forecasts.
+- Own end-to-end delivery: schema migrations, Docker-based local/dev setup, systemd timers/cron for background jobs, and ongoing production hosting at https://ikite.fyi.
+
+**Business FM — Custom CRM	2012 – 2015 | Personal project / part-time**
+*Full-stack CRM for a radio/media business client*
+
+- Designed, built, deployed, and maintained a bespoke PHP/MySQL CRM for client, contact, and sales-workflow management, owning architecture, cloud provisioning, production migration, and ongoing support as sole developer.
+- Initially deployed on Microsoft Azure before migrating production infrastructure to AWS EC2/RDS for improved cost and operational control.
+
 **EDUCATION & ACADEMIC TRAINING**
 
 **N. I. Lobachevsky State University of Nizhny Novgorod	2003 – 2008**
