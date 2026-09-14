@@ -30,5 +30,37 @@ chatgpt-kit/export_application_pdfs.py
 chatgpt-kit/README.md
 devin-kit/README.md
 devin-kit/AGENT-INSTRUCTIONS.md
+__pycache__/
+skills/__pycache__/
+jobs/runs/
+harvest.log
+
+# ---------------------------------------------------------------------------
+# 2026-09-11: this repository is PUBLIC and its purpose is the CV — README.md
+# and README-php.md — and nothing else. Everything below is either personal
+# data, other people's personal data, or working tooling that has no business
+# on a public profile. Default to ignoring; add deliberately, never by `git add -A`.
+# ---------------------------------------------------------------------------
+
+# Job-search archive: every posting evaluated, plus recruiter names, emails and
+# phone numbers transcribed from WhatsApp referral groups. Other people's
+# contact details — the single most important thing here NOT to publish.
+jobs/
+documents/
+
+# The application CRM, including MySQL dumps of every company applied to,
+# interview notes and correspondence links.
+job-tracker/
+
+# The pipeline itself: crawlers, screens, the WhatsApp CDP reader, agents and
+# skills. Also all Python, which neither CV claims.
+skills/
+.claude/
 custom-cv-generation-skill.md
-jobs/israel-java-lead-shortlist.html
+validate_cv.py
+fine_tune_margins.py
+
+# Local build artefacts and OS noise
+Beniamin-Levin-CV.docx
+.DS_Store
+**/.DS_Store

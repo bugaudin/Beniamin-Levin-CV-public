@@ -24,6 +24,19 @@ MARGIN_TOP = Inches(0.22)
 MARGIN_BOTTOM = Inches(0.26)
 LINE_SPACING = 1.02
 
+# One-page mode (the default): no page breaks, everything on a single page,
+# slightly tighter top/bottom margins. --two-page restores the 2-page layout.
+ONE_PAGE = True
+# Which job opens page 2 in the 2-page layout, matched as a case-insensitive prefix
+# of the company name. ONLYOFFICE is the default (rule 6.2, set 2026-09-10): the
+# Symphony Teleca (now Harman) role always belongs on page 1, because it carries the
+# automotive, mobile and low-level evidence a screener should see without scrolling,
+# and because "now Harman" is the alumnus signal on any Harman-group application.
+# Override with --page2-anchor when a particular CV wants a different split.
+PAGE2_ANCHOR = 'ONLYOFFICE'
+MARGIN_TOP_ONE_PAGE = Inches(0.16)
+MARGIN_BOTTOM_ONE_PAGE = Inches(0.20)
+
 # Distinctive Mac-native fonts that LibreOffice can embed.
 FONT_BODY = 'Avenir Next'
 FONT_DISPLAY = 'Georgia'
@@ -404,6 +417,7 @@ def parse_readme(path):
                 role = None
                 if (
                     next_line
+                    and not is_bullet_line(next_line)
                     and not is_section_title_text(next_line)
                     and not heading_level(next_line)[0]
                     and not (
@@ -691,7 +705,7 @@ class CvBuilder:
             style_run(
                 rd,
                 FONT_BODY,
-                size=self.font_job_date,
+                size=title_font,
                 bold=date_bold,
                 color=GREY,
             )
@@ -824,7 +838,7 @@ class CvBuilder:
         )
         for section in data['sections']:
             title_upper = section['title'].upper()
-            page_break = title_upper == FREELANCE_SECTION.upper()
+            page_break = title_upper == FREELANCE_SECTION.upper() and not ONE_PAGE
             self.section(section['title'], page_break_before=page_break)
 
             if title_upper == 'PROFESSIONAL SUMMARY':
@@ -854,9 +868,10 @@ class CvBuilder:
                         continue
                     # Without freelance content, open page 2 at Symphony Teleca.
                     page_break_job = (
-                        not has_freelance
+                        not ONE_PAGE
+                        and not has_freelance
                         and title_upper == 'PROFESSIONAL EXPERIENCE'
-                        and block['company'].upper().startswith('SYMPHONY')
+                        and block['company'].upper().startswith(PAGE2_ANCHOR)
                     )
                     self.job(
                         block['company'],
@@ -937,14 +952,16 @@ def freelance_starts_on_page_2(pdf_path):
 
 
 def layout_ok(pdf_path, exclude_freelance=False):
+    if ONE_PAGE:
+        return pdf_page_count(pdf_path) == 1
     if exclude_freelance:
         # Page 1: header through Netcracker. Page 2 opens at Symphony Teleca.
         if pdf_page_count(pdf_path) != 2:
             return False
-        if not section_starts_on_page_2(pdf_path, 'symphony'):
+        if not section_starts_on_page_2(pdf_path, PAGE2_ANCHOR.lower()):
             return False
         page2 = page_text(pdf_path, 2).lower()
-        if 'netcracker' in page2:
+        if 'netcracker' in page2 and PAGE2_ANCHOR != 'NETCRACKER':
             return False
         return True
     return freelance_starts_on_page_2(pdf_path)
@@ -962,7 +979,7 @@ def build_trial(data, phone, tmp_dir, tag, scale, line_spacing):
 
 def find_best_layout(data, phone, tmp_dir, exclude_freelance=False):
     scale_hi = 1.35 if exclude_freelance else 1.15
-    lo, hi = 0.84, scale_hi
+    lo, hi = (0.70, 1.35) if ONE_PAGE else (0.84, scale_hi)
     best_scale = lo
     found = False
     for i in range(14):
@@ -979,12 +996,14 @@ def find_best_layout(data, phone, tmp_dir, exclude_freelance=False):
         # Fall back to densest scale that still keeps a usable 2-page layout.
         for scale in (0.84, 0.88, 0.92, 0.96, 1.0):
             pdf_path = build_trial(data, phone, tmp_dir, f'fb-{scale}', scale, 0.96)
-            if pdf_page_count(pdf_path) <= 2:
+            if pdf_page_count(pdf_path) <= (1 if ONE_PAGE else 2):
                 return scale, 0.96
         return 0.84, 0.96
 
     lo, hi = (
-        (max(1.0, LINE_SPACING), LINE_SPACING + 0.18)
+        (max(0.96, LINE_SPACING - 0.06), LINE_SPACING + 0.18)
+        if ONE_PAGE
+        else (max(1.0, LINE_SPACING), LINE_SPACING + 0.18)
         if exclude_freelance
         else (max(0.96, LINE_SPACING - 0.06), LINE_SPACING + 0.06)
     )
@@ -1009,7 +1028,16 @@ def generate_pdf(
     exclude_sections=(),
     remove_legacy=False,
     readme_name=README_NAME,
+    one_page=False,
+    page2_anchor=None,
 ):
+    global ONE_PAGE, MARGIN_TOP, MARGIN_BOTTOM, PAGE2_ANCHOR
+    ONE_PAGE = one_page
+    if page2_anchor:
+        PAGE2_ANCHOR = page2_anchor.upper()
+    if one_page:
+        MARGIN_TOP = MARGIN_TOP_ONE_PAGE
+        MARGIN_BOTTOM = MARGIN_BOTTOM_ONE_PAGE
     secrets = load_secrets()
     if 'PHONE' not in secrets:
         raise SystemExit('secrets.txt must contain PHONE=...')
@@ -1049,7 +1077,8 @@ def generate_pdf(
     body_pt = BASE_FONT_BODY * best_scale
     print(
         f'saved {out_pdf} (scale={best_scale:.3f}, body={body_pt:.2f}pt, '
-        f'line_spacing={best_line_spacing:.3f}, bottom_margin={MARGIN_BOTTOM.inches:.2f}in)'
+        f'line_spacing={best_line_spacing:.3f}, bottom_margin={MARGIN_BOTTOM.inches:.2f}in'
+        f'{", one-page" if ONE_PAGE else ""})'
     )
 
 
@@ -1080,6 +1109,22 @@ def main():
         action='store_true',
         help=f'Build hands-on CV from {HANDS_ON_README} → {HANDS_ON_OUTPUT}',
     )
+    parser.add_argument(
+        '--one-page',
+        action='store_true',
+        help='Fit the whole CV on a single page (opt-in; the default is the 2-page layout)',
+    )
+    parser.add_argument(
+        '--page2-anchor',
+        default=None,
+        help="Company name (or prefix) whose job opens page 2 in the 2-page layout; "
+             "default SYMPHONY. Use it to keep a more relevant role on page 1.",
+    )
+    parser.add_argument(
+        '--two-page',
+        action='store_true',
+        help='Classic 2-page layout with the page-2 anchor (default; kept for compatibility)',
+    )
     args = parser.parse_args()
 
     output = HANDS_ON_OUTPUT if args.hands_on else args.output
@@ -1092,6 +1137,8 @@ def main():
         exclude_sections=exclude_sections,
         remove_legacy=output == DEFAULT_OUTPUT,
         readme_name=readme,
+        one_page=args.one_page,
+        page2_anchor=args.page2_anchor,
     )
 
 
